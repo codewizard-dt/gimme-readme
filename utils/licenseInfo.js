@@ -1,4 +1,6 @@
-export const licenseChoices = [
+const fuzzy = require('fuzzy')
+
+const choices = [
   {
     name: 'GNU Affero General Public License v3.0',
     value: 'GNU AGPL v3',
@@ -63,24 +65,58 @@ export const licenseChoices = [
     name: 'MIT License',
     value: 'MIT',
     color: 'yellow',
-    link: 'https://www.gnu.org/licenses/lgpl-3.0',
+    link: 'https://opensource.org/licenses/MIT',
   },
   {
     name: 'Mozilla Public License 2.0',
     value: 'MPL 2.0',
     color: 'brightgreen',
-    link: 'https://www.gnu.org/licenses/lgpl-3.0',
+    link: 'https://opensource.org/licenses/MPL-2.0',
   },
   {
-    name: 'The Unlicense',
-    value: 'Unlicense  ',
+    name: 'Unlicense',
+    value: 'Unlicense',
     color: 'blue',
     link: 'http://unlicense.org',
   },
 ]
 
-export const getLicenseBadgeUrl = ({ value, color }) => {
+const getBadgeUrl = ({ value, color }) => {
   value = value.replace(/ /g, '_').replace(/-/g, '--')
   return `https://img.shields.io/badge/license-${value}-${color}`
 }
+function retrieve(licenseValue) {
+  return choices.find(license => licenseValue === license.value)
+}
 
+function renderLink(userData) {
+  const license = retrieve(userData.license)
+  if (!license) return ''
+  return `[${license.name}](${license.link})`
+}
+function renderBadge(userData) {
+  const license = retrieve(userData.license)
+  if (!license) return ''
+  return `[![License: ${license.value}](${getBadgeUrl(license)})](${license.link})\n`
+}
+
+
+function search(answer, input = '') {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      try {
+        const results = fuzzy
+          .filter(input, choices, { extract: (license) => license.name })
+          .map((el) => el.original)
+
+        resolve(results)
+      } catch (error) {
+        console.error(error)
+      }
+    }, 250)
+  })
+}
+
+module.exports = {
+  choices, search, retrieve, renderLink, renderBadge
+}

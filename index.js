@@ -1,8 +1,12 @@
 // TODO: Include packages needed for this application
-import fs from 'fs'
-import inquirer from 'inquirer'
-import { licenseChoices } from './utils/licenseInfo.js'
-import { generateMarkdown } from './utils/generateMarkdown.js'
+const fs = require('fs')
+const inquirer = require('inquirer')
+const inquirerPrompt = require('inquirer-autocomplete-prompt')
+const licenses = require('./utils/licenseInfo.js')
+const generateMarkdown = require('./utils/generateMarkdown.js')
+const sections = require('./utils/sections.js')
+
+inquirer.registerPrompt('autocomplete', inquirerPrompt)
 
 // TODO: Create an array of questions for user input
 /**
@@ -45,14 +49,8 @@ const questions = [
   {
     name: 'license',
     message: 'Pick a license for your project',
-    type: 'list',
-    choices: licenseChoices
-  },
-  {
-    name: 'contributing',
-    message: 'Enter a comma separated list of the Github usernames of the contributors of the project',
-    type: 'input',
-    default: 'user1, user2, user3'
+    type: 'autocomplete',
+    source: licenses.search
   },
   {
     name: 'tests',
@@ -87,15 +85,16 @@ const questions = [
 
 ]
 // TODO: Create a function to write README file
-function writeToFile(fileName, data) {
-  let template = generateMarkdown(data)
-  fs.writeFileSync(fileName, template)
-  console.log(data)
+function writeToFile(fileName, answers) {
+  let template = generateMarkdown(answers)
+  fs.writeFileSync(fileName, '')
+  fs.appendFileSync(fileName, template)
 }
 
 // TODO: Create a function to initialize app
 function init() {
-  inquirer.prompt(questions)
+  let allQuestions = sections.list.flatMap(section => section.questions)
+  inquirer.prompt(allQuestions)
     .then((answers) => {
       console.log(answers)
       writeToFile('README_NEW.md', answers)
