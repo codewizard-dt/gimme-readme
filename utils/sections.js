@@ -17,8 +17,8 @@ const basicSection = (sectionName, defaultMarkdown) => {
       newQuestion(`contains.${dataKey}`, 'confirm', `Include a(n) '${sectionName}' section?`),
       newQuestion(`method.${dataKey}`, 'list', 'How would you like to provide your `markdown`?', {
         choices: [
-          { name: 'Simple inline input', value: 'input' },
-          { name: 'Open a Text Editor', value: 'editor' }
+          { name: 'Open a Text Editor (recommended)', value: 'editor' },
+          { name: 'Inline input', value: 'input' },
         ],
         default: 'input',
         when: (answers) => answers.contains[dataKey] === true
