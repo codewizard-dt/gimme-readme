@@ -3,11 +3,30 @@ const licenses = require('./licenseInfo.js')
 /** Returns a given section from the list */
 const get = (sectionName) => list.find(section => section.name.toLowerCase() === sectionName.toLowerCase())
 
+/**
+ * Creates a new question object 
+ * @param {string} name data key for the question
+ * @param {string} type type of prompt
+ * @param {string} message message displayed to user
+ * @param {object} otherOptions all other options for the given question
+ * @returns an object ready for injection into the `inquirer.prompt` command
+ */
 const newQuestion = (name, type, message, otherOptions = {}) => {
   return { name, type, message, when: true, ...otherOptions }
 }
 
+/**
+ * Generates a string for use as a data key
+ * @param {string} str a section name
+ * @returns a lowercase, all-alphabetic string
+ */
 const getBasicKey = (str) => str.toLowerCase().replace(/[^a-z]/g, '')
+/**
+ * Creates a generic section object with boilerplate questions and template
+ * @param {string} sectionName properly capitalized section name
+ * @param {string} defaultMarkdown default information for a section
+ * @returns a section object
+ */
 const basicSection = (sectionName, defaultMarkdown) => {
   const dataKey = getBasicKey(sectionName)
   return {
@@ -34,7 +53,13 @@ const basicSection = (sectionName, defaultMarkdown) => {
     ],
   }
 }
-
+/**
+ * Creates a section object with custom questions and template
+ * @param {string} sectionName properly capitalized section name
+ * @param {object} questions an array of questions for use in the `inquirer.prompt` command
+ * @param {function} template a function that receives inquirer user input and returns a string
+ * @returns a section object
+ */
 const customSection = (sectionName, questions, template) => {
   return {
     name: `${sectionName}`,
@@ -43,6 +68,9 @@ const customSection = (sectionName, questions, template) => {
   }
 }
 
+/**
+ * List of sections which contain questions for user input and templates for rendering markdown
+ */
 const list = [
   customSection('General Info', [
     newQuestion('projectName', 'input', 'Project title:', { default: 'My New Project' }),
@@ -86,9 +114,5 @@ const list = [
     return template
   }),
 ]
-
-// const defaults = {
-//   installation: ``
-// }
 
 module.exports = { get, list }
