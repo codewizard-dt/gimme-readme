@@ -8,7 +8,7 @@ const sections = require('./utils/sections.js')
 /**
  * Registers the `autocomplete` type of Inquirer prompt
  */
-inquirer.registerPrompt('autocomplete', inquirerPrompt)
+inquirer.registerPrompt('autocomplete', autocompletePrompt)
 
 /**
  * Generates markdown from section templates and writes the file
