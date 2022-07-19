@@ -26,7 +26,7 @@ function writeToFile(fileName, answers) {
  */
 function init() {
   /** Ask user for filename (default: README.md) */
-  let filenameInput = { name: 'filename', type: 'input', message: 'Enter a filename to be generated *WARNING: This will overwrite the file*', default: 'README.md' }
+  let filenameInput = { name: 'filename', type: 'input', message: 'Enter a filename to be generated *WARNING: This will overwrite the file*', default: 'README_NEW.md' }
   /** Retreives the questions from the sections list */
   let allQuestions = sections.list.flatMap(section => section.questions)
   /** 

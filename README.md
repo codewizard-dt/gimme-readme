@@ -6,7 +6,7 @@
 
 ## A Dynamic README Generator
 
-We all know how painstaking writing README files can be. Forgetting important details, agonizing over what to include. Well now you can just answer a few questions and the README will literally write itself
+We all know how painstaking writing README files can be. Forgetting important details, agonizing over what to include. Well now you can just answer a few questions and the README will literally write itself. Was this README generated using this script? Yes, it was!
 
 # Table of Contents
 
@@ -28,6 +28,10 @@ We all know how painstaking writing README files can be. Forgetting important de
 - Run `node index.js`
 - Answer a few simple questions
 - Your file will be generated for you
+
+## Sample README
+
+![Sample README](./screenshots/sample-readme.png)
 
 # License
 

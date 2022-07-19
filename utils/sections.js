@@ -27,20 +27,20 @@ const getBasicKey = (str) => str.toLowerCase().replace(/[^a-z]/g, '')
  * @param {string} defaultMarkdown default information for a section
  * @returns a section object
  */
-const basicSection = (sectionName, defaultMarkdown) => {
+const basicSection = (sectionName, defaultMarkdown, template) => {
   const dataKey = getBasicKey(sectionName)
+  const defaultTemplate = (data) => `# ${sectionName}\n${data[dataKey]}\n`
   return {
     name: `${sectionName}`,
-    template: (data) => `# ${sectionName}\n${data[dataKey]}\n`,
+    template: template || defaultTemplate,
     questions: [
-      newQuestion(`contains.${dataKey}`, 'confirm', `Include a(n) '${sectionName}' section?`),
-      newQuestion(`method.${dataKey}`, 'list', 'How would you like to provide your `markdown`?', {
+      newQuestion(`method.${dataKey}`, 'list', `${sectionName} section:`, {
         choices: [
           { name: 'Open a Text Editor (recommended)', value: 'editor' },
           { name: 'Inline input', value: 'input' },
         ],
-        default: 'input',
-        when: (answers) => answers.contains[dataKey] === true
+        default: 'editor',
+        when: true
       }),
       newQuestion(dataKey, 'input', `Enter your "${sectionName}" information in markdown format`, {
         default: defaultMarkdown,
@@ -103,14 +103,17 @@ const list = [
   ], (userData) => {
     return `# License\nThis project is provisioned under the ${licenses.renderLink(userData)}\n`
   }),
-  basicSection('Contributing', 'ContriBUTe, DAddy!'),
+  basicSection('Contributing', 'Do you want to help make this project better? Visit the the repo to check out existing issues or create a new branch to start working on a suggested feature', (userData) => {
+    return `# Contributing\n[Repo link](https://github.com/${userData.github}/${userData.repo})\n\n${userData.contributing}`
+  }),
   basicSection('Tests', 'Test me DAddy!'),
   customSection('Questions', [
-    newQuestion('github', 'input', 'Your Github username', { default: 'my-github-name' }),
-    newQuestion('email', 'input', 'Your email', { default: 'me@email.com' })
+    newQuestion('github', 'input', 'Your Github username:', { default: 'my-github-name' }),
+    newQuestion('repo', 'input', 'Repository name:', { default: 'my-repository' }),
+    newQuestion('email', 'input', 'Your email:', { default: 'me@email.com' })
   ], (userData) => {
     let template = `# Questions\n`
-    template += `If you have any questions, please direct them to my [Github](https://github.com/${userData.github}) or [email](mailto:${userData.email})`
+    template += `If you have any questions, please contact me on [Github](https://github.com/${userData.github}) or [email](mailto:${userData.email}).`
     return template
   }),
 ]
