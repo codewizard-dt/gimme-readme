@@ -1,5 +1,11 @@
+/**
+ * fuzzy is a string search package that allows better result filtering
+ */
 const fuzzy = require('fuzzy')
 
+/**
+ * A list of the most common choices for open source licenses
+ */
 const choices = [
   {
     name: 'GNU Affero General Public License v3.0',
@@ -81,26 +87,52 @@ const choices = [
   },
 ]
 
-const getBadgeUrl = ({ value, color }) => {
+/**
+ * Constructs a URL for the given license
+ * @param {object} license an item from the list of licenses above
+ * @returns a url for a license badge
+ */
+const getBadgeUrl = (license) => {
+  let { value, color } = license
   value = value.replace(/ /g, '_').replace(/-/g, '--')
   return `https://img.shields.io/badge/license-${value}-${color}`
 }
+/**
+ * Retrieves the correct license data based on user input
+ * @param {string} licenseValue the value stored by Inquirer
+ * @returns a license object from the list above
+ */
 function retrieve(licenseValue) {
   return choices.find(license => licenseValue === license.value)
 }
 
+/**
+ * Creates an appropriately formatted string to render a link for the license
+ * @param {object} userData all data from Inquirer
+ * @returns a markdown string with a link to the license information
+ */
 function renderLink(userData) {
   const license = retrieve(userData.license)
   if (!license) return ''
   return `[${license.name}](${license.link})`
 }
+/**
+ * Creates an appropriately formatted string to render a badge for the license
+ * @param {object} userData all the data from Inquirer
+ * @returns a markdown string with an image badge linked to the license info URL
+ */
 function renderBadge(userData) {
   const license = retrieve(userData.license)
   if (!license) return ''
   return `[![License: ${license.value}](${getBadgeUrl(license)})](${license.link})\n`
 }
 
-
+/**
+ * Searches the list of licenses for ones matching user input
+ * @param {*} answer 
+ * @param {*} input the current input string used to search the list of licenses
+ * @returns a Promise that resolves with a filtered list of licenses
+ */
 function search(answer, input = '') {
   return new Promise((resolve) => {
     setTimeout(() => {
